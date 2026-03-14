@@ -1,0 +1,87 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Workflow Engine Metrics",
+    "timezone": "browser",
+    "panels": [
+      {
+        "type": "row",
+        "title": "Workflow Overview",
+        "collapsed": false
+      },
+      {
+        "type": "stat",
+        "title": "Total Workflows Started",
+        "targets": [{ "expr": "sum(workflow_total{status=\"started\"})" }],
+        "gridPos": { "x": 0, "y": 0, "w": 4, "h": 3 }
+      },
+      {
+        "type": "stat",
+        "title": "Total Workflows Completed",
+        "targets": [{ "expr": "sum(workflow_total{status=\"completed\"})" }],
+        "gridPos": { "x": 4, "y": 0, "w": 4, "h": 3 }
+      },
+      {
+        "type": "stat",
+        "title": "Total Workflows Failed",
+        "targets": [{ "expr": "sum(workflow_total{status=\"failed\"})" }],
+        "gridPos": { "x": 8, "y": 0, "w": 4, "h": 3 }
+      },
+      {
+        "type": "gauge",
+        "title": "Running Workflows",
+        "targets": [{ "expr": "workflow_running_gauge" }],
+        "gridPos": { "x": 0, "y": 4, "w": 12, "h": 4 }
+      },
+      {
+        "type": "graph",
+        "title": "Workflow Duration (avg, p95)",
+        "targets": [
+          { "expr": "histogram_quantile(0.95, sum(rate(workflow_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p95" },
+          { "expr": "rate(workflow_duration_seconds_sum[5m]) / rate(workflow_duration_seconds_count[5m])", "legendFormat": "avg" }
+        ],
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 6 }
+      },
+      {
+        "type": "row",
+        "title": "Task Metrics",
+        "collapsed": false
+      },
+      {
+        "type": "stat",
+        "title": "Total Tasks Succeeded",
+        "targets": [{ "expr": "sum(task_total{status=\"success\"})" }],
+        "gridPos": { "x": 0, "y": 15, "w": 4, "h": 3 }
+      },
+      {
+        "type": "stat",
+        "title": "Total Tasks Failed",
+        "targets": [{ "expr": "sum(task_total{status=\"failed\"})" }],
+        "gridPos": { "x": 4, "y": 15, "w": 4, "h": 3 }
+      },
+      {
+        "type": "stat",
+        "title": "Total Task Retries",
+        "targets": [{ "expr": "sum(task_retry_total)" }],
+        "gridPos": { "x": 8, "y": 15, "w": 4, "h": 3 }
+      },
+      {
+        "type": "graph",
+        "title": "Task Duration (avg, p95)",
+        "targets": [
+          { "expr": "histogram_quantile(0.95, sum(rate(task_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p95" },
+          { "expr": "rate(task_duration_seconds_sum[5m]) / rate(task_duration_seconds_count[5m])", "legendFormat": "avg" }
+        ],
+        "gridPos": { "x": 0, "y": 19, "w": 12, "h": 6 }
+      },
+      {
+        "type": "gauge",
+        "title": "Active Tasks",
+        "targets": [{ "expr": "task_active_gauge" }],
+        "gridPos": { "x": 0, "y": 26, "w": 12, "h": 4 }
+      }
+    ],
+    "schemaVersion": 36,
+    "version": 1
+  }
+}
