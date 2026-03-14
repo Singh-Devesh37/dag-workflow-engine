@@ -1,0 +1,50 @@
+# Workflow Engine Configuration Example
+# Copy this file to application.properties and customize as needed
+
+# ===================================================================
+# EXECUTION STRATEGY CONFIGURATION
+# ===================================================================
+# Choose execution strategy: threadpool | virtual | forkjoin
+# - threadpool: Traditional fixed thread pool (baseline for comparison)
+# - virtual: Java 21 Virtual Threads - best for I/O-bound workloads
+# - forkjoin: Work-stealing pool - good for CPU-bound tasks
+workflow.execution.strategy=virtual
+
+# ThreadPool Strategy Configuration
+# Number of threads in the pool (default: 2x CPU cores)
+# Recommended: 2x-4x CPU cores for I/O-bound, 1x CPU cores for CPU-bound
+workflow.execution.threadpool.size=16
+
+# ForkJoin Strategy Configuration
+# Parallelism level (default: CPU core count)
+# Recommended: 1x CPU cores for most workloads
+workflow.execution.forkjoin.parallelism=8
+
+# ===================================================================
+# PERFORMANCE BENCHMARKING
+# ===================================================================
+# For benchmarking, test with different strategies and compare:
+# 1. Wide DAG (100 parallel I/O tasks): virtual should win by 5-10x
+# 2. Deep DAG (50 sequential tasks): all strategies similar
+# 3. Mixed DAG (realistic): virtual should win by 3-5x
+# 4. CPU-bound (script tasks): threadpool/forkjoin competitive
+
+# ===================================================================
+# EXAMPLE CONFIGURATIONS FOR DIFFERENT SCENARIOS
+# ===================================================================
+
+# Configuration 1: High-throughput I/O workloads (HTTP, Kafka, Email)
+# workflow.execution.strategy=virtual
+# No size configuration needed - unlimited virtual threads!
+
+# Configuration 2: CPU-bound workloads (Script tasks, computation)
+# workflow.execution.strategy=threadpool
+# workflow.execution.threadpool.size=8  # Match CPU core count
+
+# Configuration 3: Mixed workloads with load balancing
+# workflow.execution.strategy=forkjoin
+# workflow.execution.forkjoin.parallelism=8
+
+# Configuration 4: Baseline for benchmarking
+# workflow.execution.strategy=threadpool
+# workflow.execution.threadpool.size=16
